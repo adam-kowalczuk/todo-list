@@ -30,6 +30,25 @@ export default function Home() {
             placeholder="new todo item"
           />
         </div>
+        {/* Todo Item */}
+        <ul className="block w-full pt-6">
+          <li className="w-full border-2 rounded-xl mt-2 hover:border-blue-300">
+            <input
+              id="1"
+              type="checkbox"
+              className="float-left block w-6 h-6 m-3"
+            />
+            <button
+              id="1"
+              className="float-right w-7 h-7 m-2.5 rounded-2xl bg-red-700 text-gray-200 shadow-md hover:bg-red-500 hover:scale-105"
+            >
+              x
+            </button>
+            <label htmlFor="1" className="block w-full p-3">
+              Item 1
+            </label>
+          </li>
+        </ul>
       </div>
     </div>
   );
