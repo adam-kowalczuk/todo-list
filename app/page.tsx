@@ -3,15 +3,20 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { FaPlus } from "react-icons/fa";
 
+interface TodoItem {
+  id: string;
+  content: string;
+}
+
 export default function Home() {
-  const [todo, setTodo] = useState([]);
+  const [todo, setTodo] = useState<TodoItem[]>([]);
   const [newTodo, setNewTodo] = useState("");
 
   const getRandomNumber = () => {
     return Math.floor(Math.random() * 9999);
   };
 
-  const handleKeyUp = (key: any) => {
+  const handleKeyUp = (key: string) => {
     if (key === "Enter" && newTodo) {
       const randomNumber = getRandomNumber;
 
@@ -26,7 +31,7 @@ export default function Home() {
     }
   };
 
-  const handleDelete = (id: any) => {
+  const handleDelete = (id: number) => {
     if (id > -1) {
       setTodo(todo.slice(0, id).concat(todo.slice(id + 1)));
     }
