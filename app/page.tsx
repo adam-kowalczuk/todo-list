@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
-  const [todo, setTodo] = useState([{ id: "1", content: "Item 1" }]);
+  const [todo, setTodo] = useState([]);
   const [newTodo, setNewTodo] = useState("");
 
   const getRandomNumber = () => {
@@ -23,6 +23,12 @@ export default function Home() {
       setTodo(todo.concat(newItem));
 
       setNewTodo("");
+    }
+  };
+
+  const handleDelete = (id: any) => {
+    if (id > -1) {
+      setTodo(todo.slice(0, id).concat(todo.slice(id + 1)));
     }
   };
 
