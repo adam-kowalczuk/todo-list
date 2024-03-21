@@ -4,10 +4,7 @@ import { format } from "date-fns";
 import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
-  const [todo, setTodo] = useState([
-    { id: "1", content: "Item 1" },
-    { id: "2", content: "Item 2" }
-  ]);
+  const [todo, setTodo] = useState([{ id: "1", content: "Item 1" }]);
   const [newTodo, setNewTodo] = useState("");
 
   const getRandomNumber = () => {
@@ -61,22 +58,30 @@ export default function Home() {
         </div>
         {/* Todo Item */}
         <ul className="block w-full pt-6">
-          <li className="w-full border-2 rounded-xl mt-2 hover:border-blue-300">
-            <input
-              id="1"
-              type="checkbox"
-              className="float-left block w-6 h-6 m-3"
-            />
-            <button
-              id="1"
-              className="float-right w-7 h-7 m-2.5 rounded-2xl bg-red-700 text-gray-200 shadow-md hover:bg-red-500 hover:scale-105"
-            >
-              x
-            </button>
-            <label htmlFor="1" className="block w-full p-3">
-              Item 1
-            </label>
-          </li>
+          {todo?.map((item, index) => {
+            return (
+              <li
+                key={item.id}
+                className="w-full border-2 rounded-xl mt-2 hover:border-blue-300"
+              >
+                <input
+                  id={String(index)}
+                  type="checkbox"
+                  className="float-left block w-6 h-6 m-3"
+                />
+                <button
+                  id={String(index)}
+                  onClick={() => handleDelete(index)}
+                  className="float-right w-7 h-7 m-2.5 rounded-2xl bg-red-700 text-gray-200 shadow-md hover:bg-red-500 hover:scale-105"
+                >
+                  x
+                </button>
+                <label htmlFor={String(index)} className="block w-full p-3">
+                  {item.content}
+                </label>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>
