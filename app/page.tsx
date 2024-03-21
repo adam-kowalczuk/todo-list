@@ -1,7 +1,34 @@
+"use client";
+import { useState } from "react";
 import { format } from "date-fns";
 import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
+  const [todo, setTodo] = useState([
+    { id: "1", content: "Item 1" },
+    { id: "2", content: "Item 2" }
+  ]);
+  const [newTodo, setNewTodo] = useState("");
+
+  const getRandomNumber = () => {
+    return Math.floor(Math.random() * 9999);
+  };
+
+  const handleKeyUp = (key: any) => {
+    if (key === "Enter" && newTodo) {
+      const randomNumber = getRandomNumber;
+
+      const newItem = {
+        id: `item-${randomNumber}`,
+        content: newTodo
+      };
+
+      setTodo(todo.concat(newItem));
+
+      setNewTodo("");
+    }
+  };
+
   return (
     <div className="flex justify-center pt-40">
       <div className="max-w-sm w-full shadow-lg bg-white p-8 rounded-xl opacity-90">
@@ -25,7 +52,9 @@ export default function Home() {
           <input
             type="text"
             id="newTodo"
-            value=""
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            onKeyUp={(e) => handleKeyUp(e.key)}
             className="black w-full pl-10 p-2 border-4 rounded-full bg-gray-600 text-white"
             placeholder="new todo item"
           />
