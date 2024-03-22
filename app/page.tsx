@@ -2,6 +2,12 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { FaPlus } from "react-icons/fa";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable
+} from "react-beautiful-dnd";
 
 interface TodoItem {
   id: string;
@@ -18,7 +24,7 @@ export default function Home() {
 
   const handleKeyUp = (key: string) => {
     if (key === "Enter" && newTodo) {
-      const randomNumber = getRandomNumber;
+      const randomNumber = getRandomNumber();
 
       const newItem = {
         id: `item-${randomNumber}`,
@@ -35,6 +41,36 @@ export default function Home() {
     if (id > -1) {
       setTodo(todo.slice(0, id).concat(todo.slice(id + 1)));
     }
+  };
+
+  // const reorder = (list: any, startIndex: any, endIndex: any) => {
+  //   const result = Array.from(list);
+  //   const [removed] = result.splice(startIndex, 1);
+  //   result.splice(endIndex, 0, removed);
+  //   return result;
+  // };
+
+  const reorder = (
+    list: TodoItem[],
+    startIndex: number,
+    endIndex: number
+  ): TodoItem[] => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const handleOnDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const items: TodoItem[] = reorder(todo, source.index, destination.index);
+
+    setTodo(items);
   };
 
   return (
@@ -68,32 +104,61 @@ export default function Home() {
           />
         </div>
         {/* Todo Item */}
-        <ul className="block w-full pt-6">
-          {todo?.map((item, index) => {
-            return (
-              <li
-                key={item.id}
-                className="w-full border-2 rounded-xl mt-2 hover:border-blue-300"
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="droppable">
+            {(droppableProvided) => (
+              <div
+                {...droppableProvided.droppableProps}
+                ref={droppableProvided.innerRef}
               >
-                <input
-                  id={String(index)}
-                  type="checkbox"
-                  className="float-left block w-6 h-6 m-3"
-                />
-                <button
-                  id={String(index)}
-                  onClick={() => handleDelete(index)}
-                  className="float-right w-7 h-7 m-2.5 rounded-2xl bg-red-700 text-gray-200 shadow-md hover:bg-red-500 hover:scale-105"
-                >
-                  x
-                </button>
-                <label htmlFor={String(index)} className="block w-full p-3">
-                  {item.content}
-                </label>
-              </li>
-            );
-          })}
-        </ul>
+                <ul className="block w-full pt-6">
+                  {todo?.map((item, index) => {
+                    return (
+                      <Draggable
+                        draggableId={item.id}
+                        key={item.id}
+                        index={index}
+                      >
+                        {(draggableProvided) => (
+                          <div
+                            {...draggableProvided.draggableProps}
+                            {...draggableProvided.dragHandleProps}
+                            ref={draggableProvided.innerRef}
+                          >
+                            <li
+                              key={item.id}
+                              className="w-full border-2 rounded-xl mt-2 hover:border-blue-300"
+                            >
+                              <input
+                                id={`checkbox-${item.id}`}
+                                type="checkbox"
+                                className="float-left block w-6 h-6 m-3"
+                              />
+                              <button
+                                id={`delete-${item.id}`}
+                                onClick={() => handleDelete(index)}
+                                className="float-right w-7 h-7 m-2.5 rounded-2xl bg-red-700 text-gray-200 shadow-md hover:bg-red-500 hover:scale-105"
+                              >
+                                x
+                              </button>
+                              <label
+                                htmlFor={`checkbox-${item.id}`}
+                                className="block w-full p-3"
+                              >
+                                {item.content}
+                              </label>
+                            </li>
+                          </div>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                </ul>
+                {droppableProvided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </div>
   );
